@@ -54,6 +54,9 @@ allprojects {
   group = 'org.elasticsearch'
   version = VersionProperties.elasticsearch
   description = "Elasticsearch subproject ${project.path}"
+  repositories {
+    maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+  }
 }
 
 String licenseCommit
