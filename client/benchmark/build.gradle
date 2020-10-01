@@ -31,26 +31,20 @@ mainClassName = 'org.elasticsearch.client.benchmark.BenchmarkMain'
 // never try to invoke tests on the benchmark project - there aren't any
 test.enabled = false
 
-buildscript {
-  repositories {
-    maven {
-      url 'https://maven.aliyun.com/repository/public/'
-    }
-  }
-  dependencies {
-    api 'org.apache.commons:commons-math3:3.2'
 
-    api project(":client:rest")
-    // bottleneck should be the client, not Elasticsearch
-    api project(path: ':client:client-benchmark-noop-api-plugin')
-    // for transport client
-    api project(":server")
-    api project(":client:transport")
-    api project(':modules:transport-netty4')
-    api project(':modules:reindex')
-    api project(':modules:lang-mustache')
-    api project(':modules:percolator')
-  }
+dependencies {
+  api 'org.apache.commons:commons-math3:3.2'
+
+  api project(":client:rest")
+  // bottleneck should be the client, not Elasticsearch
+  api project(path: ':client:client-benchmark-noop-api-plugin')
+  // for transport client
+  api project(":server")
+  api project(":client:transport")
+  api project(':modules:transport-netty4')
+  api project(':modules:reindex')
+  api project(':modules:lang-mustache')
+  api project(':modules:percolator')
 }
 
 

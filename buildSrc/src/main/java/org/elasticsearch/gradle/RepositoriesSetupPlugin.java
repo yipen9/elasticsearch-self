@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 
 public class RepositoriesSetupPlugin implements Plugin<Project> {
 
-    private static final List<String> SECURE_URL_SCHEMES = Arrays.asList("file", "https", "s3");
+    private static final List<String> SECURE_URL_SCHEMES = Arrays.asList("file", "https", "s3","http");
     private static final Pattern LUCENE_SNAPSHOT_REGEX = Pattern.compile("\\w+-snapshot-([a-z0-9]+)");
 
     @Override
