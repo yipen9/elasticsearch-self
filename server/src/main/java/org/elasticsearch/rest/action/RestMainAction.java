@@ -38,6 +38,9 @@ import static java.util.Collections.unmodifiableList;
 import static org.elasticsearch.rest.RestRequest.Method.GET;
 import static org.elasticsearch.rest.RestRequest.Method.HEAD;
 
+/**
+ * 返回主页信息
+ */
 public class RestMainAction extends BaseRestHandler {
 
     @Override
