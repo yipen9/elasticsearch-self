@@ -39,6 +39,7 @@ import org.apache.logging.log4j.status.StatusData;
 import org.apache.logging.log4j.status.StatusListener;
 import org.apache.logging.log4j.status.StatusLogger;
 import org.elasticsearch.cli.ExitCodes;
+import org.elasticsearch.cli.Terminal;
 import org.elasticsearch.cli.UserException;
 import org.elasticsearch.cluster.ClusterName;
 import org.elasticsearch.common.SuppressForbidden;
@@ -142,6 +143,7 @@ public class LogConfigurator {
      * as the node id is available.
      */
     public static void setNodeName(String nodeName) {
+        Terminal.DEFAULT.println("14.给LogConfigurator设置开头为setNodeName:"+nodeName);
         NodeNamePatternConverter.setNodeName(nodeName);
     }
 

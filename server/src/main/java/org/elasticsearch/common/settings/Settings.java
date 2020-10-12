@@ -19,6 +19,7 @@
 
 package org.elasticsearch.common.settings;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.lucene.util.SetOnce;
@@ -767,6 +768,10 @@ public final class Settings implements ToXContentFragment {
          */
         public String get(String key) {
             return Settings.toString(map.get(key));
+        }
+
+        public String showSetting() {
+            return JSON.toJSONString(map);
         }
 
         /** Return the current secure settings, or {@code null} if none have been set. */

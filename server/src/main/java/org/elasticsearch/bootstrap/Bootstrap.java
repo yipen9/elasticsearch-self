@@ -235,6 +235,7 @@ final class Bootstrap {
     }
 
     static SecureSettings loadSecureSettings(Environment initialEnv) throws BootstrapException {
+        Terminal.DEFAULT.println("10.开始加载安全方面的配置loadSecureSettings");
         final KeyStoreWrapper keystore;
         try {
             keystore = KeyStoreWrapper.load(initialEnv.configFile());
@@ -300,6 +301,7 @@ final class Bootstrap {
             final SecureSettings secureSettings,
             final Settings initialSettings,
             final Path configPath) {
+        Terminal.DEFAULT.println("12.生成启动的Environment");
         Settings.Builder builder = Settings.builder();
         if (pidFile != null) {
             builder.put(Environment.NODE_PIDFILE_SETTING.getKey(), pidFile);
@@ -342,6 +344,7 @@ final class Bootstrap {
             final Environment initialEnv) throws BootstrapException, NodeValidationException, UserException {
         // force the class initializer for BootstrapInfo to run before
         // the security manager is installed
+        Terminal.DEFAULT.println("9.开始调用BootstrapInfo.init启动ES服务");
         BootstrapInfo.init();
 
         INSTANCE = new Bootstrap();
@@ -350,11 +353,13 @@ final class Bootstrap {
         final Environment environment = createEnvironment(pidFile, keystore, initialEnv.settings(), initialEnv.configFile());
 
         LogConfigurator.setNodeName(Node.NODE_NAME_SETTING.get(environment.settings()));
+        Terminal.DEFAULT.println("15.给Elasticsearch环境配置日志LogConfigurator.configure");
         try {
             LogConfigurator.configure(environment);
         } catch (IOException e) {
             throw new BootstrapException(e);
         }
+        Terminal.DEFAULT.println("15.从java.specification.version获取javaVersion:"+JavaVersion.current());
         if (JavaVersion.current().compareTo(JavaVersion.parse("11")) < 0) {
             final String message = String.format(
                             Locale.ROOT,

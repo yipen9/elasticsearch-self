@@ -86,7 +86,7 @@ public abstract class EnvironmentAwareCommand extends Command {
         putSystemPropertyIfSettingIsMissing(settings, "path.data", "es.path.data");
         putSystemPropertyIfSettingIsMissing(settings, "path.home", "es.path.home");
         putSystemPropertyIfSettingIsMissing(settings, "path.logs", "es.path.logs");
-        Terminal.DEFAULT.println("6.启动OptionSet参数：" + settings);
+        Terminal.DEFAULT.println("6.启动OptionSet参数,createEnv：" + settings);
         execute(terminal, options, createEnv(settings));
     }
 

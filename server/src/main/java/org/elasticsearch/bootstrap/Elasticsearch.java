@@ -189,6 +189,7 @@ class Elasticsearch extends EnvironmentAwareCommand {
     void init(final boolean daemonize, final Path pidFile, final boolean quiet, Environment initialEnv)
         throws NodeValidationException, UserException {
         try {
+            Terminal.DEFAULT.println("8.开始Elasticsearch.init");
             Bootstrap.init(!daemonize, pidFile, quiet, initialEnv);
         } catch (BootstrapException | RuntimeException e) {
             // format exceptions to the console in a special way
