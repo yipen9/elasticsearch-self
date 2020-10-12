@@ -101,8 +101,11 @@ dependencies {
   api "org.apache.lucene:lucene-suggest:${versions.lucene}"
 
   // utilities
+
   api project(":libs:elasticsearch-cli")
   api 'com.carrotsearch:hppc:0.8.1'
+
+  api 'com.alibaba:fastjson:1.2.73'
 
   // time handling, remove with java 8 time
   api "joda-time:joda-time:${versions.joda}"

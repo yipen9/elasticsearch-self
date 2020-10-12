@@ -19,6 +19,7 @@
 
 package org.elasticsearch.bootstrap;
 
+import com.alibaba.fastjson.JSON;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import joptsimple.OptionSpecBuilder;
@@ -29,6 +30,10 @@ import org.elasticsearch.cli.ExitCodes;
 import org.elasticsearch.cli.Terminal;
 import org.elasticsearch.cli.UserException;
 import org.elasticsearch.common.logging.LogConfigurator;
+import org.elasticsearch.common.xcontent.XContentHelper;
+import org.elasticsearch.common.xcontent.XContentParserUtils;
+import org.elasticsearch.common.xcontent.json.JsonXContent;
+import org.elasticsearch.common.xcontent.json.JsonXContentParser;
 import org.elasticsearch.env.Environment;
 import org.elasticsearch.monitor.jvm.JvmInfo;
 import org.elasticsearch.node.NodeValidationException;
@@ -87,7 +92,8 @@ class Elasticsearch extends EnvironmentAwareCommand {
             }
 
         });
-        LogConfigurator.registerErrorListener();
+        Terminal.DEFAULT.println("2.注册错误的日志输出LogConfigurator.registerErrorListener");
+        LogConfigurator.registerErrorListener();//注册错误的日志输出
         final Elasticsearch elasticsearch = new Elasticsearch();
         int status = main(args, elasticsearch, Terminal.DEFAULT);
         if (status != ExitCodes.OK) {
@@ -107,10 +113,12 @@ class Elasticsearch extends EnvironmentAwareCommand {
     }
 
     private static void overrideDnsCachePolicyProperties() {
+        Terminal.DEFAULT.println("1.开始执行overrideDnsCachePolicyProperties");
         for (final String property : new String[] {"networkaddress.cache.ttl", "networkaddress.cache.negative.ttl" }) {
             final String overrideProperty = "es." + property;
             final String overrideValue = System.getProperty(overrideProperty);
             if (overrideValue != null) {
+                Terminal.DEFAULT.println("1.获取overrideProperty，overrideProperty: " + overrideProperty + " : " + overrideValue);
                 try {
                     // round-trip the property to an integer and back to a string to ensure that it parses properly
                     Security.setProperty(property, Integer.toString(Integer.valueOf(overrideValue)));
@@ -120,6 +128,7 @@ class Elasticsearch extends EnvironmentAwareCommand {
                 }
             }
         }
+        Terminal.DEFAULT.println("1.结束执行overrideDnsCachePolicyProperties");
     }
 
     static int main(final String[] args, final Elasticsearch elasticsearch, final Terminal terminal) throws Exception {
@@ -128,6 +137,19 @@ class Elasticsearch extends EnvironmentAwareCommand {
 
     @Override
     protected void execute(Terminal terminal, OptionSet options, Environment env) throws UserException {
+        Terminal.DEFAULT.println("7.执行Elasticsearch.execute,参数env.settings：" + env.settings().getAsGroups());
+        Terminal.DEFAULT.println("7.执行Elasticsearch.execute,参数env.binFile：" + env.binFile());
+        Terminal.DEFAULT.println("7.执行Elasticsearch.execute,参数env.configFile：" + env.configFile());
+        Terminal.DEFAULT.println("7.执行Elasticsearch.execute,参数env.dataFiles：" + JSON.toJSONString(env.dataFiles()));
+        Terminal.DEFAULT.println("7.执行Elasticsearch.execute,参数env.repoFiles：" + JSON.toJSONString(env.repoFiles()));
+        Terminal.DEFAULT.println("7.执行Elasticsearch.execute,参数env.pluginsFile：" + env.pluginsFile());
+        Terminal.DEFAULT.println("7.执行Elasticsearch.execute,参数env.modulesFile：" + env.modulesFile());
+        Terminal.DEFAULT.println("7.执行Elasticsearch.execute,参数env.sharedDataFile：" + env.sharedDataFile());
+        Terminal.DEFAULT.println("7.执行Elasticsearch.execute,参数env.libFile：" + env.libFile());
+        Terminal.DEFAULT.println("7.执行Elasticsearch.execute,参数env.logsFile：" + env.logsFile());
+        Terminal.DEFAULT.println("7.执行Elasticsearch.execute,参数env.pidFile：" + env.pidFile());
+        Terminal.DEFAULT.println("7.执行Elasticsearch.execute,参数env.tmpFile：" + env.tmpFile());
+
         if (options.nonOptionArguments().isEmpty() == false) {
             throw new UserException(ExitCodes.USAGE, "Positional arguments not allowed, found " + options.nonOptionArguments());
         }

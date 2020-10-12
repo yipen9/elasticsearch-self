@@ -63,6 +63,7 @@ public abstract class Command implements Closeable {
 
     /** Parses options for this command from args and executes it. */
     public final int main(String[] args, Terminal terminal) throws Exception {
+        Terminal.DEFAULT.println("4.增加shutdownHookThread线程");
         if (addShutdownHook()) {
 
             shutdownHookThread = new Thread(() -> {
@@ -83,9 +84,8 @@ public abstract class Command implements Closeable {
             });
             Runtime.getRuntime().addShutdownHook(shutdownHookThread);
         }
-
         beforeMain.run();
-
+        Terminal.DEFAULT.println("4.执行beforeMain.run");
         try {
             mainWithoutErrorHandling(args, terminal);
         } catch (OptionException e) {
@@ -109,8 +109,9 @@ public abstract class Command implements Closeable {
      * Executes the command, but all errors are thrown.
      */
     void mainWithoutErrorHandling(String[] args, Terminal terminal) throws Exception {
+        Terminal.DEFAULT.println("5.执行mainWithoutErrorHandling，所有错误都抛出");
         final OptionSet options = parser.parse(args);
-
+        Terminal.DEFAULT.println("5.解析args参数:" + Arrays.toString(args));
         if (options.has(helpOption)) {
             printHelp(terminal, false);
             return;
