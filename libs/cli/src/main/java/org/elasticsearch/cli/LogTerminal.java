@@ -7,7 +7,7 @@
  * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -16,20 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-apply plugin: 'elasticsearch.build'
-apply plugin: 'nebula.optional-base'
-apply plugin: 'elasticsearch.publish'
 
-dependencies {
-  api 'net.sf.jopt-simple:jopt-simple:5.0.2'
-  api "org.apache.logging.log4j:log4j-api:${versions.log4j}"
-  api project(':libs:elasticsearch-core')
-}
+package org.elasticsearch.cli;
 
-test.enabled = false
-// Since CLI does not depend on :server, it cannot run the jarHell task
-jarHell.enabled = false
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-tasks.named('forbiddenApisMain').configure {
-  replaceSignatureFiles 'jdk-signatures'
+
+public class LogTerminal {
+    private final static Logger logger = LogManager.getLogger(LogTerminal.class);
+
+    public final static void println(String msg) {
+        logger.info(msg);
+    }
 }

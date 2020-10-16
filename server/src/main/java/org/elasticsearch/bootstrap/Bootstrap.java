@@ -27,6 +27,7 @@ import org.apache.logging.log4j.core.appender.ConsoleAppender;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.lucene.util.Constants;
 import org.elasticsearch.cli.KeyStoreAwareCommand;
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.cli.Terminal;
 import org.elasticsearch.common.settings.SecureString;
 import org.elasticsearch.core.internal.io.IOUtils;
@@ -104,17 +105,17 @@ final class Bootstrap {
 
     /** initialize native resources */
     public static void initializeNatives(Path tmpFile, boolean mlockAll, boolean systemCallFilter, boolean ctrlHandler) {
-        Terminal.DEFAULT.println("17.初始化Natives相关环境");
+        LogTerminal.println("17.初始化Natives相关环境");
         final Logger logger = LogManager.getLogger(Bootstrap.class);
 
         // check if the user is running as root, and bail
-        Terminal.DEFAULT.println("17.检查是否是root账号：" + Natives.definitelyRunningAsRoot());
+        LogTerminal.println("17.检查是否是root账号：" + Natives.definitelyRunningAsRoot());
         if (Natives.definitelyRunningAsRoot()) {
             throw new RuntimeException("can not run elasticsearch as root");
         }
 
         // enable system call filter
-        Terminal.DEFAULT.println("17. enable系统system call filter");
+        LogTerminal.println("17. enable系统system call filter");
         if (systemCallFilter) {
             Natives.tryInstallSystemCallFilter(tmpFile);
         }
@@ -222,12 +223,12 @@ final class Bootstrap {
 
         // install SM after natives, shutdown hooks, etc.
         try {
-            Terminal.DEFAULT.println("17.开始安全设置Security.configure");
+            LogTerminal.println("17.开始安全设置Security.configure");
             Security.configure(environment, BootstrapSettings.SECURITY_FILTER_BAD_DEFAULTS_SETTING.get(settings));
         } catch (IOException | NoSuchAlgorithmException e) {
             throw new BootstrapException(e);
         }
-        Terminal.DEFAULT.println("18.实例化Node：node = new Node(environment)");
+        LogTerminal.println("18.实例化Node：node = new Node(environment)");
         node = new Node(environment) {
             @Override
             protected void validateNodeBeforeAcceptingRequests(
@@ -239,7 +240,7 @@ final class Bootstrap {
     }
 
     static SecureSettings loadSecureSettings(Environment initialEnv) throws BootstrapException {
-        Terminal.DEFAULT.println("10.开始加载安全方面的配置loadSecureSettings");
+        LogTerminal.println("10.开始加载安全方面的配置loadSecureSettings");
         final KeyStoreWrapper keystore;
         try {
             keystore = KeyStoreWrapper.load(initialEnv.configFile());
@@ -305,7 +306,7 @@ final class Bootstrap {
             final SecureSettings secureSettings,
             final Settings initialSettings,
             final Path configPath) {
-        Terminal.DEFAULT.println("12.生成启动的Environment");
+        LogTerminal.println("12.生成启动的Environment");
         Settings.Builder builder = Settings.builder();
         if (pidFile != null) {
             builder.put(Environment.NODE_PIDFILE_SETTING.getKey(), pidFile);
@@ -348,7 +349,7 @@ final class Bootstrap {
             final Environment initialEnv) throws BootstrapException, NodeValidationException, UserException {
         // force the class initializer for BootstrapInfo to run before
         // the security manager is installed
-        Terminal.DEFAULT.println("9.开始调用BootstrapInfo.init启动ES服务");
+        LogTerminal.println("9.开始调用BootstrapInfo.init启动ES服务");
         BootstrapInfo.init();
 
         INSTANCE = new Bootstrap();
@@ -357,13 +358,13 @@ final class Bootstrap {
         final Environment environment = createEnvironment(pidFile, keystore, initialEnv.settings(), initialEnv.configFile());
 
         LogConfigurator.setNodeName(Node.NODE_NAME_SETTING.get(environment.settings()));
-        Terminal.DEFAULT.println("15.给Elasticsearch环境配置日志LogConfigurator.configure");
+        LogTerminal.println("15.给Elasticsearch环境配置日志LogConfigurator.configure");
         try {
             LogConfigurator.configure(environment);
         } catch (IOException e) {
             throw new BootstrapException(e);
         }
-        Terminal.DEFAULT.println("15.从java.specification.version获取javaVersion:"+JavaVersion.current());
+        LogTerminal.println("15.从java.specification.version获取javaVersion:"+JavaVersion.current());
         if (JavaVersion.current().compareTo(JavaVersion.parse("11")) < 0) {
             final String message = String.format(
                             Locale.ROOT,
@@ -471,7 +472,7 @@ final class Bootstrap {
     }
 
     private static void checkLucene() {
-        Terminal.DEFAULT.println("16.验证lucene的版本，需要的版本" + Version.CURRENT.luceneVersion + ",实际使用的lucene版本：" + org.apache.lucene.util.Version.LATEST);
+        LogTerminal.println("16.验证lucene的版本，需要的版本" + Version.CURRENT.luceneVersion + ",实际使用的lucene版本：" + org.apache.lucene.util.Version.LATEST);
         if (Version.CURRENT.luceneVersion.equals(org.apache.lucene.util.Version.LATEST) == false) {
             throw new AssertionError("Lucene version mismatch this version of Elasticsearch requires lucene version ["
                 + Version.CURRENT.luceneVersion + "]  but the current lucene version is [" + org.apache.lucene.util.Version.LATEST + "]");

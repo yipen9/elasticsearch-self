@@ -31,6 +31,7 @@ import java.util.function.Function;
 
 import com.alibaba.fastjson.JSON;
 import org.elasticsearch.Version;
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.cli.Terminal;
 import org.elasticsearch.cluster.ClusterName;
 import org.elasticsearch.common.settings.Settings;
@@ -79,7 +80,7 @@ public class InternalSettingsPreparer {
         }
 
         output = Settings.builder(); // start with a fresh output
-        Terminal.DEFAULT.println("6or13.开始加载elasticsearch.yml文件");
+        LogTerminal.println("6or13.开始加载elasticsearch.yml文件");
         Path path = environment.configFile().resolve("elasticsearch.yml");
         if (Files.exists(path)) {
             try {
@@ -88,7 +89,7 @@ public class InternalSettingsPreparer {
                 throw new SettingsException("Failed to load settings from " + path.toString(), e);
             }
         }
-        Terminal.DEFAULT.println("6or13.elasticsearch.yml文件内容为："+ output.showSetting());
+        LogTerminal.println("6or13.elasticsearch.yml文件内容为："+ output.showSetting());
         // re-initialize settings now that the config file has been loaded
         initializeSettings(output, input, properties);
         checkSettingsForTerminalDeprecation(output);

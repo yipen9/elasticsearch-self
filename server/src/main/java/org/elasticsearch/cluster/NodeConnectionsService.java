@@ -27,6 +27,7 @@ import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.support.GroupedActionListener;
 import org.elasticsearch.action.support.PlainListenableActionFuture;
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.cli.Terminal;
 import org.elasticsearch.cluster.coordination.FollowersChecker;
 import org.elasticsearch.cluster.node.DiscoveryNode;
@@ -200,7 +201,7 @@ public class NodeConnectionsService extends AbstractLifecycleComponent {
                 final GroupedActionListener<Void> listener = new GroupedActionListener<>(
                     ActionListener.wrap(onCompletion), connectionTargets.size());
                 for (final ConnectionTarget connectionTarget : connectionTargets) {
-                    Terminal.DEFAULT.println("connectDisconnectedTargets:" + connectionTarget.discoveryNode.toString());
+                    LogTerminal.println("connectDisconnectedTargets:" + connectionTarget.discoveryNode.toString());
                     runnables.add(connectionTarget.ensureConnected(listener));
                 }
             }
@@ -211,7 +212,7 @@ public class NodeConnectionsService extends AbstractLifecycleComponent {
     class ConnectionChecker extends AbstractRunnable {
         protected void doRun() {
             if (connectionChecker == this) {
-                Terminal.DEFAULT.println("ConnectionChecker开始执行，connectDisconnectedTargets()");
+                LogTerminal.println("ConnectionChecker开始执行，connectDisconnectedTargets()");
                 connectDisconnectedTargets(this::scheduleNextCheck);
             }
         }

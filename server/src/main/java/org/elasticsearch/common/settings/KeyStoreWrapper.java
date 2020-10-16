@@ -30,6 +30,7 @@ import org.apache.lucene.store.IndexOutput;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.SetOnce;
 import org.elasticsearch.cli.ExitCodes;
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.cli.Terminal;
 import org.elasticsearch.cli.UserException;
 import org.elasticsearch.common.Randomness;
@@ -212,9 +213,9 @@ public class KeyStoreWrapper implements SecureSettings {
      * Returns {@code null} if no keystore exists.
      */
     public static KeyStoreWrapper load(Path configDir) throws IOException {
-        Terminal.DEFAULT.println("11.获取elasticsearch.keystore文件路径");
+        LogTerminal.println("11.获取elasticsearch.keystore文件路径");
         Path keystoreFile = keystorePath(configDir);
-        Terminal.DEFAULT.println("11.获取elasticsearch.keystore路径为：" + keystoreFile);
+        LogTerminal.println("11.获取elasticsearch.keystore路径为：" + keystoreFile);
         if (Files.exists(keystoreFile) == false) {
             return null;
         }

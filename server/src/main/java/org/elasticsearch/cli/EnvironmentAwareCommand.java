@@ -59,13 +59,13 @@ public abstract class EnvironmentAwareCommand extends Command {
      */
     public EnvironmentAwareCommand(final String description, final Runnable beforeMain) {
         super(description, beforeMain);
-        Terminal.DEFAULT.println("3.执行Starts Elasticsearch，beforeMain ： 为null");
+        LogTerminal.println("3.执行Starts Elasticsearch，beforeMain ： 为null");
         this.settingOption = parser.accepts("E", "Configure a setting").withRequiredArg().ofType(KeyValuePair.class);
     }
 
     @Override
     protected void execute(Terminal terminal, OptionSet options) throws Exception {
-        Terminal.DEFAULT.println("6.执行EnvironmentAwareCommand.execute");
+        LogTerminal.println("6.执行EnvironmentAwareCommand.execute");
         final Map<String, String> settings = new HashMap<>();
         for (final KeyValuePair kvp : settingOption.values(options)) {
             if (kvp.value.isEmpty()) {
@@ -86,7 +86,7 @@ public abstract class EnvironmentAwareCommand extends Command {
         putSystemPropertyIfSettingIsMissing(settings, "path.data", "es.path.data");
         putSystemPropertyIfSettingIsMissing(settings, "path.home", "es.path.home");
         putSystemPropertyIfSettingIsMissing(settings, "path.logs", "es.path.logs");
-        Terminal.DEFAULT.println("6.启动OptionSet参数,createEnv：" + settings);
+        LogTerminal.println("6.启动OptionSet参数,createEnv：" + settings);
         execute(terminal, options, createEnv(settings));
     }
 

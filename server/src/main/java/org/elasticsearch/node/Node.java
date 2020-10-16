@@ -31,6 +31,7 @@ import org.elasticsearch.Version;
 import org.elasticsearch.action.ActionModule;
 import org.elasticsearch.action.ActionType;
 import org.elasticsearch.action.admin.cluster.snapshots.status.TransportNodesSnapshotsStatus;
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.cli.Terminal;
 import org.elasticsearch.index.IndexingPressure;
 import org.elasticsearch.action.search.SearchExecutionStatsCollector;
@@ -288,7 +289,7 @@ public class Node implements Closeable {
      */
     protected Node(final Environment initialEnvironment,
                    Collection<Class<? extends Plugin>> classpathPlugins, boolean forbidPrivateIndexSettings) {
-        Terminal.DEFAULT.println("19.打印Node实例化，对应JVM，OS等信息");
+        LogTerminal.println("19.打印Node实例化，对应JVM，OS等信息");
         logger = LogManager.getLogger(Node.class);
         final List<Closeable> resourcesToClose = new ArrayList<>(); // register everything we need to release in the case of an error
         boolean success = false;
@@ -584,7 +585,7 @@ public class Node implements Closeable {
                 clusterService.getClusterSettings(), pluginsService.filterPlugins(DiscoveryPlugin.class),
                 clusterModule.getAllocationService(), environment.configFile(), gatewayMetaState, rerouteService,
                 fsHealthService);
-            Terminal.DEFAULT.println("实例化NodeService");
+            LogTerminal.println("实例化NodeService");
             this.nodeService = new NodeService(settings, threadPool, monitorService, discoveryModule.getDiscovery(),
                 transportService, indicesService, pluginsService, circuitBreakerService, scriptService,
                 httpServerTransport, ingestService, clusterService, settingsModule.getSettingsFilter(), responseCollectorService,
@@ -606,7 +607,7 @@ public class Node implements Closeable {
                 new PersistentTasksClusterService(settings, registry, clusterService, threadPool);
             resourcesToClose.add(persistentTasksClusterService);
             final PersistentTasksService persistentTasksService = new PersistentTasksService(clusterService, threadPool, client);
-            Terminal.DEFAULT.println("modules.add开始");
+            LogTerminal.println("modules.add开始");
             modules.add(b -> {
                     b.bind(Node.class).toInstance(this);
                     b.bind(NodeService.class).toInstance(nodeService);
@@ -757,28 +758,28 @@ public class Node implements Closeable {
         injector.getInstance(MappingUpdatedAction.class).setClient(client);
         injector.getInstance(IndicesService.class).start();
         injector.getInstance(IndicesClusterStateService.class).start();
-        Terminal.DEFAULT.println("启动SnapshotsService，用来创建快照");
+        LogTerminal.println("启动SnapshotsService，用来创建快照");
         injector.getInstance(SnapshotsService.class).start();
-        Terminal.DEFAULT.println("启动SnapshotShardsService，用来创建，停止分片级别的快照starting and stopping shard level snapshots");
+        LogTerminal.println("启动SnapshotShardsService，用来创建，停止分片级别的快照starting and stopping shard level snapshots");
         injector.getInstance(SnapshotShardsService.class).start();
-        Terminal.DEFAULT.println("启动RepositoriesService，负责维护和提供对节点上快照存储库的访问的服务");
+        LogTerminal.println("启动RepositoriesService，负责维护和提供对节点上快照存储库的访问的服务");
         injector.getInstance(RepositoriesService.class).start();
-        Terminal.DEFAULT.println("启动SearchService，负责搜索服务");
+        LogTerminal.println("启动SearchService，负责搜索服务");
         injector.getInstance(SearchService.class).start();
-        Terminal.DEFAULT.println("启动FsHealthService，定期运行并尝试创建临时文件，以查看文件系统是否可写。如果没有，那么它会将路径标记为不健康");
+        LogTerminal.println("启动FsHealthService，定期运行并尝试创建临时文件，以查看文件系统是否可写。如果没有，那么它会将路径标记为不健康");
         injector.getInstance(FsHealthService.class).start();
-        Terminal.DEFAULT.println("启动MonitorService.doStart，主要是jvmGcMonitorService.start();");
+        LogTerminal.println("启动MonitorService.doStart，主要是jvmGcMonitorService.start();");
         nodeService.getMonitorService().start();
 
         final ClusterService clusterService = injector.getInstance(ClusterService.class);
-        Terminal.DEFAULT.println("启动NodeConnectionsService，进行ConnectionChecker重连");
+        LogTerminal.println("启动NodeConnectionsService，进行ConnectionChecker重连");
         final NodeConnectionsService nodeConnectionsService = injector.getInstance(NodeConnectionsService.class);
         nodeConnectionsService.start();
         clusterService.setNodeConnectionsService(nodeConnectionsService);
-        Terminal.DEFAULT.println("启动GatewayService，gateway模块就是为了集群的整体数据恢复服务的");
+        LogTerminal.println("启动GatewayService，gateway模块就是为了集群的整体数据恢复服务的");
         injector.getInstance(GatewayService.class).start();
         Discovery discovery = injector.getInstance(Discovery.class);
-        Terminal.DEFAULT.println("Discovery :" + discovery +"设置:setClusterStatePublisher");
+        LogTerminal.println("Discovery :" + discovery +"设置:setClusterStatePublisher");
         clusterService.getMasterService().setClusterStatePublisher(discovery::publish);
 
         // Start the transport service now so the publish address will be added to the local disco node in ClusterService
