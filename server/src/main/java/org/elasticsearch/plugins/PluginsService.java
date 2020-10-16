@@ -19,6 +19,7 @@
 
 package org.elasticsearch.plugins;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.util.CharFilterFactory;
@@ -392,9 +393,9 @@ public class PluginsService implements ReportingService<PluginsAndModules> {
         for (final Path plugin : findPluginDirs(directory)) {
             Terminal.DEFAULT.println("22.从" + directory + "读取pluginInfo信息：");
             Terminal.DEFAULT.println("-----------------------------------------");
-            Terminal.DEFAULT.println(plugin + "");
-            Terminal.DEFAULT.println("-----------------------------------------");
             final Bundle bundle = readPluginBundle(bundles, plugin, type);
+            Terminal.DEFAULT.println(JSON.toJSONString(bundle.plugin) + "");
+            Terminal.DEFAULT.println("-----------------------------------------");
             bundles.add(bundle);
         }
 
