@@ -784,7 +784,9 @@ public class Node implements Closeable {
 
         // Start the transport service now so the publish address will be added to the local disco node in ClusterService
         TransportService transportService = injector.getInstance(TransportService.class);
+        LogTerminal.println("transportService对应taskManager设置TaskResultsService，用来保存Task的执行结果");
         transportService.getTaskManager().setTaskResultsService(injector.getInstance(TaskResultsService.class));
+        LogTerminal.println("TaskCancellationService,用来cancelling相关Task任务");
         transportService.getTaskManager().setTaskCancellationService(new TaskCancellationService(transportService));
         transportService.start();
         assert localNodeFactory.getNode() != null;
