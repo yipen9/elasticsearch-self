@@ -32,6 +32,7 @@ import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.Version;
 import org.elasticsearch.action.admin.cluster.node.info.PluginsAndModules;
 import org.elasticsearch.bootstrap.JarHell;
+import org.elasticsearch.cli.Terminal;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.collect.Tuple;
 import org.elasticsearch.common.component.LifecycleComponent;
@@ -109,6 +110,7 @@ public class PluginsService implements ReportingService<PluginsAndModules> {
         Path pluginsDirectory,
         Collection<Class<? extends Plugin>> classpathPlugins
     ) {
+        Terminal.DEFAULT.println("20.开始实例化PluginsService");
         this.settings = settings;
         this.configPath = configPath;
 
@@ -321,11 +323,13 @@ public class PluginsService implements ReportingService<PluginsAndModules> {
      * @throws IOException if an I/O exception occurred reading the directories
      */
     public static List<Path> findPluginDirs(final Path rootPath) throws IOException {
+        Terminal.DEFAULT.println("17or21.查询Path：" + rootPath + "下所有的pugins");
         final List<Path> plugins = new ArrayList<>();
         final Set<String> seen = new HashSet<>();
         if (Files.exists(rootPath)) {
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(rootPath)) {
                 for (Path plugin : stream) {
+                    Terminal.DEFAULT.println("plugin:" + plugin);
                     if (FileSystemUtils.isDesktopServicesStore(plugin) ||
                         plugin.getFileName().toString().startsWith(".removing-")) {
                         continue;
@@ -386,6 +390,10 @@ public class PluginsService implements ReportingService<PluginsAndModules> {
     private static Set<Bundle> findBundles(final Path directory, String type) throws IOException {
         final Set<Bundle> bundles = new HashSet<>();
         for (final Path plugin : findPluginDirs(directory)) {
+            Terminal.DEFAULT.println("22.从" + directory + "读取pluginInfo信息：");
+            Terminal.DEFAULT.println("-----------------------------------------");
+            Terminal.DEFAULT.println(plugin + "");
+            Terminal.DEFAULT.println("-----------------------------------------");
             final Bundle bundle = readPluginBundle(bundles, plugin, type);
             bundles.add(bundle);
         }

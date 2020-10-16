@@ -104,14 +104,17 @@ final class Bootstrap {
 
     /** initialize native resources */
     public static void initializeNatives(Path tmpFile, boolean mlockAll, boolean systemCallFilter, boolean ctrlHandler) {
+        Terminal.DEFAULT.println("17.初始化Natives相关环境");
         final Logger logger = LogManager.getLogger(Bootstrap.class);
 
         // check if the user is running as root, and bail
+        Terminal.DEFAULT.println("17.检查是否是root账号：" + Natives.definitelyRunningAsRoot());
         if (Natives.definitelyRunningAsRoot()) {
             throw new RuntimeException("can not run elasticsearch as root");
         }
 
         // enable system call filter
+        Terminal.DEFAULT.println("17. enable系统system call filter");
         if (systemCallFilter) {
             Natives.tryInstallSystemCallFilter(tmpFile);
         }
@@ -219,11 +222,12 @@ final class Bootstrap {
 
         // install SM after natives, shutdown hooks, etc.
         try {
+            Terminal.DEFAULT.println("17.开始安全设置Security.configure");
             Security.configure(environment, BootstrapSettings.SECURITY_FILTER_BAD_DEFAULTS_SETTING.get(settings));
         } catch (IOException | NoSuchAlgorithmException e) {
             throw new BootstrapException(e);
         }
-
+        Terminal.DEFAULT.println("18.实例化Node：node = new Node(environment)");
         node = new Node(environment) {
             @Override
             protected void validateNodeBeforeAcceptingRequests(
@@ -467,6 +471,7 @@ final class Bootstrap {
     }
 
     private static void checkLucene() {
+        Terminal.DEFAULT.println("16.验证lucene的版本，需要的版本" + Version.CURRENT.luceneVersion + ",实际使用的lucene版本：" + org.apache.lucene.util.Version.LATEST);
         if (Version.CURRENT.luceneVersion.equals(org.apache.lucene.util.Version.LATEST) == false) {
             throw new AssertionError("Lucene version mismatch this version of Elasticsearch requires lucene version ["
                 + Version.CURRENT.luceneVersion + "]  but the current lucene version is [" + org.apache.lucene.util.Version.LATEST + "]");
