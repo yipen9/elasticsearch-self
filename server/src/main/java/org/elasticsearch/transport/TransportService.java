@@ -26,6 +26,7 @@ import org.elasticsearch.Version;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.ActionListenerResponseHandler;
 import org.elasticsearch.action.support.PlainActionFuture;
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.cluster.ClusterName;
@@ -232,6 +233,7 @@ public class TransportService extends AbstractLifecycleComponent implements Repo
         connectionManager.addListener(this);
         transport.start();
         if (transport.boundAddress() != null && logger.isInfoEnabled()) {
+            LogTerminal.println("transport对应boundAddress地址：" + boundAddress());
             logger.info("{}", transport.boundAddress());
             for (Map.Entry<String, BoundTransportAddress> entry : transport.profileBoundAddresses().entrySet()) {
                 logger.info("profile [{}]: {}", entry.getKey(), entry.getValue());
