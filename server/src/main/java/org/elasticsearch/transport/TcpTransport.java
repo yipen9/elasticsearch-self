@@ -27,6 +27,7 @@ import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.Version;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.support.ThreadedActionListener;
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.cluster.node.DiscoveryNode;
 import org.elasticsearch.common.Booleans;
 import org.elasticsearch.common.Strings;
@@ -369,6 +370,7 @@ public abstract class TcpTransport extends AbstractLifecycleComponent implements
 
         List<InetSocketAddress> boundAddresses = new ArrayList<>();
         for (InetAddress hostAddress : hostAddresses) {
+            LogTerminal.println("绑定hostAddress：" + hostAddress);
             boundAddresses.add(bindToPort(profileSettings.profileName, hostAddress, profileSettings.portOrRange));
         }
 

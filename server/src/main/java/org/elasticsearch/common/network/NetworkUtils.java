@@ -21,6 +21,7 @@ package org.elasticsearch.common.network;
 
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.Constants;
+import org.elasticsearch.cli.LogTerminal;
 
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -155,8 +156,10 @@ public abstract class NetworkUtils {
     private static InetAddress[] filterAllAddresses(final Predicate<InetAddress> predicate, final String message) throws IOException {
         final List<NetworkInterface> interfaces = getInterfaces();
         final List<InetAddress> list = new ArrayList<>();
+        LogTerminal.println("遍历local:");
         for (final NetworkInterface intf : interfaces) {
             for (final InetAddress address : Collections.list(intf.getInetAddresses())) {
+                LogTerminal.println("InetAddress:" + address + "是不是回环地址loopback:" + predicate.test(address) + "isUP:" + isUp(intf));
                 if (predicate.test(address) && isUp(intf)) {
                     list.add(address);
                 }
