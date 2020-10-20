@@ -903,7 +903,7 @@ public abstract class TcpTransport extends AbstractLifecycleComponent implements
             bindHosts = (profileBindHosts.isEmpty() ? NetworkService.GLOBAL_NETWORK_BIND_HOST_SETTING.get(settings) : profileBindHosts);
             LogTerminal.println("传输服务绑定的主机地址bindHosts:" + bindHosts);
             publishHosts = TransportSettings.PUBLISH_HOST_PROFILE.getConcreteSettingForNamespace(profileName).get(settings);
-            LogTerminal.println("几点在集群上发布的主机地址，其他节点连接这个地址publishHosts：" + publishHosts);
+            LogTerminal.println("此点在集群上发布的主机地址，其他节点连接这个地址publishHosts：" + publishHosts);
             Setting<String> concretePort = TransportSettings.PORT_PROFILE.getConcreteSettingForNamespace(profileName);
             if (concretePort.exists(settings) == false && isDefaultProfile == false) {
                 throw new IllegalStateException("profile [" + profileName + "] has no port configured");

@@ -27,6 +27,6 @@ public class LogTerminal {
     private final static Logger logger = LogManager.getLogger(LogTerminal.class);
 
     public final static void println(String msg) {
-        logger.info(msg);
+        logger.error(msg);
     }
 }

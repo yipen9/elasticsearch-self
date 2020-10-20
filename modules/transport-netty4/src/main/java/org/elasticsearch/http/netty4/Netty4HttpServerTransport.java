@@ -42,6 +42,7 @@ import io.netty.util.AttributeKey;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ExceptionsHelper;
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.common.network.NetworkService;
 import org.elasticsearch.common.settings.ClusterSettings;
 import org.elasticsearch.common.settings.Setting;
@@ -176,6 +177,7 @@ public class Netty4HttpServerTransport extends AbstractHttpServerTransport {
 
     @Override
     protected void doStart() {
+        LogTerminal.println("开始启动Netty4HttpServerTransport");
         boolean success = false;
         try {
             sharedGroup = sharedGroupFactory.getHttpGroup();

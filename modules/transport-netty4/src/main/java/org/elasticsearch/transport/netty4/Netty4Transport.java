@@ -37,6 +37,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.elasticsearch.ExceptionsHelper;
 import org.elasticsearch.Version;
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.cluster.node.DiscoveryNode;
 import org.elasticsearch.common.SuppressForbidden;
 import org.elasticsearch.common.io.stream.NamedWriteableRegistry;
@@ -119,6 +120,7 @@ public class Netty4Transport extends TcpTransport {
 
     @Override
     protected void doStart() {
+        LogTerminal.println("启动Netty4Transport");
         boolean success = false;
         try {
             sharedGroup = sharedGroupFactory.getTransportGroup();

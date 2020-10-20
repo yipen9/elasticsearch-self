@@ -19,7 +19,9 @@
 
 package org.elasticsearch.common.network;
 
+import com.alibaba.fastjson.JSON;
 import org.elasticsearch.action.support.replication.ReplicationTask;
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.cluster.routing.allocation.command.AllocateEmptyPrimaryAllocationCommand;
 import org.elasticsearch.cluster.routing.allocation.command.AllocateReplicaAllocationCommand;
 import org.elasticsearch.cluster.routing.allocation.command.AllocateStalePrimaryAllocationCommand;
@@ -149,6 +151,7 @@ public final class NetworkModule {
         if (transportFactories.putIfAbsent(key, factory) != null) {
             throw new IllegalArgumentException("transport for name: " + key + " is already registered");
         }
+        LogTerminal.println("注册的Transport传输模块：" + key);
     }
 
     /** Adds an http transport implementation that can be selected by setting {@link #HTTP_TYPE_KEY}. */
@@ -160,6 +163,7 @@ public final class NetworkModule {
         if (transportHttpFactories.putIfAbsent(key, factory) != null) {
             throw new IllegalArgumentException("transport for name: " + key + " is already registered");
         }
+        LogTerminal.println("注册的HTTP传输模块：" + key);
     }
 
     /**
@@ -197,6 +201,7 @@ public final class NetworkModule {
         if (factory == null) {
             throw new IllegalStateException("Unsupported http.type [" + name + "]");
         }
+        LogTerminal.println("返回注册的HTTP传输模块：" + name);
         return factory;
     }
 
@@ -211,6 +216,7 @@ public final class NetworkModule {
         if (factory == null) {
             throw new IllegalStateException("Unsupported transport.type [" + name + "]");
         }
+        LogTerminal.println("返回注册的传输模块：" + name);
         return factory;
     }
 
@@ -218,6 +224,7 @@ public final class NetworkModule {
      * Registers a new {@link TransportInterceptor}
      */
     private void registerTransportInterceptor(TransportInterceptor interceptor) {
+        LogTerminal.println("注册Transport拦截器：" + interceptor.toString());
         this.transportIntercetors.add(Objects.requireNonNull(interceptor, "interceptor must not be null"));
     }
 

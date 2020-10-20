@@ -21,6 +21,7 @@ package org.elasticsearch.transport;
 
 import org.apache.lucene.util.SetOnce;
 import org.elasticsearch.Version;
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.common.io.stream.NamedWriteableRegistry;
 import org.elasticsearch.common.network.NetworkModule;
 import org.elasticsearch.common.network.NetworkService;
@@ -79,6 +80,13 @@ public class Netty4Plugin extends Plugin implements NetworkPlugin {
     public Map<String, Supplier<Transport>> getTransports(Settings settings, ThreadPool threadPool, PageCacheRecycler pageCacheRecycler,
                                                           CircuitBreakerService circuitBreakerService,
                                                           NamedWriteableRegistry namedWriteableRegistry, NetworkService networkService) {
+        LogTerminal.println("NetworkPlugin对应:getTransports为Netty4Transport");
+        LogTerminal.println("NetworkPlugin对应:Version.CURRENT：" + Version.CURRENT);
+        LogTerminal.println("NetworkPlugin对应:networkService：" + networkService);
+        LogTerminal.println("NetworkPlugin对应:pageCacheRecycler：" + pageCacheRecycler);
+        LogTerminal.println("NetworkPlugin对应:namedWriteableRegistry：" + namedWriteableRegistry);
+        LogTerminal.println("NetworkPlugin对应:circuitBreakerService：" + circuitBreakerService);
+        LogTerminal.println("NetworkPlugin对应:getSharedGroupFactory：" + getSharedGroupFactory(settings));
         return Collections.singletonMap(NETTY_TRANSPORT_NAME, () -> new Netty4Transport(settings, Version.CURRENT, threadPool,
             networkService, pageCacheRecycler, namedWriteableRegistry, circuitBreakerService, getSharedGroupFactory(settings)));
     }
@@ -91,6 +99,13 @@ public class Netty4Plugin extends Plugin implements NetworkPlugin {
                                                                         NetworkService networkService,
                                                                         HttpServerTransport.Dispatcher dispatcher,
                                                                         ClusterSettings clusterSettings) {
+        LogTerminal.println("NetworkPlugin对应:getHttpTransports为Netty4HttpServerTransport");
+        LogTerminal.println("NetworkPlugin对应:networkService：" + networkService);
+        LogTerminal.println("NetworkPlugin对应:bigArrays：" + bigArrays);
+        LogTerminal.println("NetworkPlugin对应:xContentRegistry：" + xContentRegistry);
+        LogTerminal.println("NetworkPlugin对应:dispatcher：" + dispatcher);
+        LogTerminal.println("NetworkPlugin对应:clusterSettings：" + clusterSettings);
+        LogTerminal.println("NetworkPlugin对应:getSharedGroupFactory：" + getSharedGroupFactory(settings));
         return Collections.singletonMap(NETTY_HTTP_TRANSPORT_NAME,
             () -> new Netty4HttpServerTransport(settings, networkService, bigArrays, threadPool, xContentRegistry, dispatcher,
                 clusterSettings, getSharedGroupFactory(settings)));
