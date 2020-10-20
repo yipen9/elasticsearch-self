@@ -493,6 +493,7 @@ public abstract class TcpTransport extends AbstractLifecycleComponent implements
     }
 
     private int[] defaultPortRange() {
+        LogTerminal.println("获取绑定端口范围。默认9300~9400");
         return new PortsRange(
             settings.get(
                 TransportSettings.PORT_PROFILE.getConcreteSettingForNamespace(TransportSettings.DEFAULT_PROFILE).getKey(),
@@ -900,7 +901,9 @@ public abstract class TcpTransport extends AbstractLifecycleComponent implements
             receiveBufferSize = TransportSettings.TCP_RECEIVE_BUFFER_SIZE_PROFILE.getConcreteSettingForNamespace(profileName).get(settings);
             List<String> profileBindHosts = TransportSettings.BIND_HOST_PROFILE.getConcreteSettingForNamespace(profileName).get(settings);
             bindHosts = (profileBindHosts.isEmpty() ? NetworkService.GLOBAL_NETWORK_BIND_HOST_SETTING.get(settings) : profileBindHosts);
+            LogTerminal.println("传输服务绑定的主机地址bindHosts:" + bindHosts);
             publishHosts = TransportSettings.PUBLISH_HOST_PROFILE.getConcreteSettingForNamespace(profileName).get(settings);
+            LogTerminal.println("几点在集群上发布的主机地址，其他节点连接这个地址publishHosts：" + publishHosts);
             Setting<String> concretePort = TransportSettings.PORT_PROFILE.getConcreteSettingForNamespace(profileName);
             if (concretePort.exists(settings) == false && isDefaultProfile == false) {
                 throw new IllegalStateException("profile [" + profileName + "] has no port configured");
@@ -908,6 +911,7 @@ public abstract class TcpTransport extends AbstractLifecycleComponent implements
             portOrRange = TransportSettings.PORT_PROFILE.getConcreteSettingForNamespace(profileName).get(settings);
             publishPort = isDefaultProfile ? TransportSettings.PUBLISH_PORT.get(settings) :
                 TransportSettings.PUBLISH_PORT_PROFILE.getConcreteSettingForNamespace(profileName).get(settings);
+            LogTerminal.println("publishPort集群中其他节点与词节点通信时应使用的端口：" + publishPort);
         }
     }
 

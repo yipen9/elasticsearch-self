@@ -18,9 +18,11 @@
  */
 package org.elasticsearch.transport;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.action.ActionListener;
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.cluster.node.DiscoveryNode;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.util.concurrent.AbstractRefCounted;
@@ -251,6 +253,7 @@ public class ClusterConnectionManager implements ConnectionManager {
 
     private void internalOpenConnection(DiscoveryNode node, ConnectionProfile connectionProfile,
                                         ActionListener<Transport.Connection> listener) {
+        LogTerminal.println("开始internalOpenConnection：" + JSON.toJSONString(connectionProfile));
         transport.openConnection(node, connectionProfile, ActionListener.map(listener, connection -> {
             assert Transports.assertNotTransportThread("internalOpenConnection success");
             try {
