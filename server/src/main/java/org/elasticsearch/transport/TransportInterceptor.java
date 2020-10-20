@@ -24,6 +24,7 @@ import org.elasticsearch.common.io.stream.Writeable.Reader;
 
 /**
  * This interface allows plugins to intercept requests on both the sender and the receiver side.
+ * 允许插件在发送和接受前进行拦截
  */
 public interface TransportInterceptor {
     /**

@@ -50,6 +50,9 @@ import java.util.function.Function;
 
 import static org.elasticsearch.xpack.core.security.SecurityField.setting;
 
+/**
+ * 安全插件拦截
+ */
 public class SecurityServerTransportInterceptor implements TransportInterceptor {
 
     private static final Function<String, Setting<String>> TRANSPORT_TYPE_SETTING_TEMPLATE = key -> new Setting<>(key, "node", v -> {
