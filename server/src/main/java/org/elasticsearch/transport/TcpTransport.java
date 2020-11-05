@@ -256,6 +256,7 @@ public abstract class TcpTransport extends AbstractLifecycleComponent implements
         @Override
         public void sendRequest(long requestId, String action, TransportRequest request, TransportRequestOptions options)
             throws IOException, TransportException {
+            LogTerminal.println("传输TransportRequestOptions:" + options);
             if (isClosing.get()) {
                 throw new NodeNotConnectedException(node, "connection already closed");
             }

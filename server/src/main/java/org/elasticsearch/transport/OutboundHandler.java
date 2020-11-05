@@ -25,6 +25,7 @@ import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.elasticsearch.Version;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.NotifyOnceListener;
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.cluster.node.DiscoveryNode;
 import org.elasticsearch.common.CheckedSupplier;
 import org.elasticsearch.common.bytes.BytesReference;
@@ -124,6 +125,7 @@ public final class OutboundHandler {
         channel.getChannelStats().markAccessed(threadPool.relativeTimeInMillis());
         // stash thread context so that channel event loop is not polluted by thread context
         try (ThreadContext.StoredContext existing = threadPool.getThreadContext().stashContext()) {
+            LogTerminal.println("channel : " + channel + "发送内容：" + sendContext);
             channel.sendMessage(sendContext);
         } catch (RuntimeException ex) {
             sendContext.onFailure(ex);

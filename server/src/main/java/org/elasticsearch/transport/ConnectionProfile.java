@@ -18,6 +18,7 @@
  */
 package org.elasticsearch.transport;
 
+import org.elasticsearch.cli.LogTerminal;
 import org.elasticsearch.cluster.node.DiscoveryNode;
 import org.elasticsearch.common.Nullable;
 import org.elasticsearch.common.settings.Settings;
@@ -73,6 +74,7 @@ public final class ConnectionProfile {
      * @return the connection profile
      */
     public static ConnectionProfile buildDefaultConnectionProfile(Settings settings) {
+        LogTerminal.println("构造默认的连接设置：buildDefaultConnectionProfile");
         int connectionsPerNodeRecovery = TransportSettings.CONNECTIONS_PER_NODE_RECOVERY.get(settings);
         int connectionsPerNodeBulk = TransportSettings.CONNECTIONS_PER_NODE_BULK.get(settings);
         int connectionsPerNodeReg = TransportSettings.CONNECTIONS_PER_NODE_REG.get(settings);
@@ -223,6 +225,7 @@ public final class ConnectionProfile {
                     throw new IllegalArgumentException("type [" + type + "] is already registered");
                 }
             }
+
             addedTypes.addAll(Arrays.asList(types));
             handles.add(new ConnectionTypeHandle(this.numConnections, numConnections, EnumSet.copyOf(Arrays.asList(types))));
             this.numConnections += numConnections;
@@ -314,6 +317,7 @@ public final class ConnectionProfile {
         private final AtomicInteger counter = new AtomicInteger();
 
         private ConnectionTypeHandle(int offset, int length, Set<TransportRequestOptions.Type> types) {
+            LogTerminal.println("给定TransportRequestOptions类型：" + types + "从 " + offset + "开始" + "，长度：" + length);
             this.length = length;
             this.offset = offset;
             this.types = types;
