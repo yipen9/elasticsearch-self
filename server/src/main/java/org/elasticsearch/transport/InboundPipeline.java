@@ -44,7 +44,7 @@ public class InboundPipeline implements Releasable {
     private final StatsTracker statsTracker;
     private final InboundDecoder decoder;
     private final InboundAggregator aggregator;
-    private final BiConsumer<TcpChannel, InboundMessage> messageHandler;
+    private final BiConsumer<TcpChannel, InboundMessage> messageHandler; /**{@link TcpTransport#inboundMessage} {@link InboundHandler} **/
     private Exception uncaughtException;
     private final ArrayDeque<ReleasableBytesReference> pending = new ArrayDeque<>(2);
     private boolean isClosed = false;

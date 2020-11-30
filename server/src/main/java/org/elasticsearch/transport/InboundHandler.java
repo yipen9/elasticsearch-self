@@ -162,7 +162,7 @@ public class InboundHandler {
                 } else {
                     final StreamInput stream = namedWriteableStream(message.openOrGetStreamInput());
                     assertRemoteVersion(stream, header.getVersion());
-                    final RequestHandlerRegistry<T> reg = requestHandlers.getHandler(action);
+                    final RequestHandlerRegistry<T> reg = requestHandlers.getHandler(action);   //处理注册的action
                     assert reg != null;
                     final T request = reg.newRequest(stream);
                     request.remoteAddress(new TransportAddress(channel.getRemoteAddress()));

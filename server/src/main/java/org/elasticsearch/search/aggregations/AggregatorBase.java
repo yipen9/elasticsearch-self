@@ -270,7 +270,7 @@ public abstract class AggregatorBase extends Aggregator {
     }
 
     /** Release instance-specific data. */
-    protected void doClose() {}
+    public void doClose() {}
 
     /**
      * Can be overridden by aggregator implementation to be called back when the collection phase ends.
