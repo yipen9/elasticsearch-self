@@ -687,6 +687,7 @@ public abstract class TcpTransport extends AbstractLifecycleComponent implements
 
     /**
      * Handles inbound message that has been decoded.
+     * 处理入站的已经被解码的InboundMessage
      *
      * @param channel the channel the message is from
      * @param message the message
@@ -702,7 +703,7 @@ public abstract class TcpTransport extends AbstractLifecycleComponent implements
     /**
      * Validates the first 6 bytes of the message header and returns the length of the message. If 6 bytes
      * are not available, it returns -1.
-     *
+     *读取header对应的数据，前6个bytes。并且返回内容的长度
      * @param networkBytes the will be read
      * @return the length of the message
      * @throws StreamCorruptedException              if the message header format is not recognized
@@ -719,7 +720,7 @@ public abstract class TcpTransport extends AbstractLifecycleComponent implements
     }
 
     private static int readHeaderBuffer(BytesReference headerBuffer) throws IOException {
-        if (headerBuffer.get(0) != 'E' || headerBuffer.get(1) != 'S') {
+        if (headerBuffer.get(0) != 'E' || headerBuffer.get(1) != 'S') {     //headerBuffer必须以ES开头
             if (appearsToBeHTTPRequest(headerBuffer)) {
                 throw new HttpRequestOnTransportException("This is not an HTTP port");
             }
@@ -741,7 +742,7 @@ public abstract class TcpTransport extends AbstractLifecycleComponent implements
 
             throw new StreamCorruptedException("invalid internal transport message format, got " + firstBytes);
         }
-        final int messageLength = headerBuffer.getInt(TcpHeader.MARKER_BYTES_SIZE);
+        final int messageLength = headerBuffer.getInt(TcpHeader.MARKER_BYTES_SIZE);//读取4个字节
 
         if (messageLength == TransportKeepAlive.PING_DATA_SIZE) {
             // This is a ping

@@ -58,9 +58,9 @@ public class InboundDecoder implements Releasable {
     }
 
     public int internalDecode(ReleasableBytesReference reference, Consumer<Object> fragmentConsumer) throws IOException {
-        if (isOnHeader()) {
+        if (isOnHeader()) { //解析header
             int messageLength = TcpTransport.readMessageLength(reference);
-            if (messageLength == -1) {
+            if (messageLength == -1) {  //不够6个字节
                 return 0;
             } else if (messageLength == 0) {
                 fragmentConsumer.accept(PING);
@@ -70,7 +70,7 @@ public class InboundDecoder implements Releasable {
                 if (headerBytesToRead == 0) {
                     return 0;
                 } else {
-                    totalNetworkSize = messageLength + TcpHeader.BYTES_REQUIRED_FOR_MESSAGE_SIZE;
+                    totalNetworkSize = messageLength + TcpHeader.BYTES_REQUIRED_FOR_MESSAGE_SIZE; //总共所有的networkSize
 
                     Header header = readHeader(version, messageLength, reference);
                     bytesConsumed += headerBytesToRead;
@@ -79,10 +79,10 @@ public class InboundDecoder implements Releasable {
                     }
                     fragmentConsumer.accept(header);
 
-                    if (isDone()) {
+                    if (isDone()) { //是否完成
                         finishMessage(fragmentConsumer);
                     }
-                    return headerBytesToRead;
+                    return headerBytesToRead;   //返回header使用的bytes数
                 }
             }
         } else {
@@ -90,13 +90,13 @@ public class InboundDecoder implements Releasable {
             if (decompressor != null && decompressor.canDecompress(reference.length()) == false) {
                 return 0;
             }
-            int bytesToConsume = Math.min(reference.length(), totalNetworkSize - bytesConsumed);
+            int bytesToConsume = Math.min(reference.length(), totalNetworkSize - bytesConsumed);    //去reference长度和剩下字节数少的
             bytesConsumed += bytesToConsume;
             ReleasableBytesReference retainedContent;
-            if (isDone()) {
+            if (isDone()) {//读取完成
                 retainedContent = reference.retainedSlice(0, bytesToConsume);
             } else {
-                retainedContent = reference.retain();
+                retainedContent = reference.retain();       // 读取的reference中所有的长度
             }
             if (decompressor != null) {
                 decompress(retainedContent);
@@ -108,7 +108,7 @@ public class InboundDecoder implements Releasable {
                 fragmentConsumer.accept(retainedContent);
             }
             if (isDone()) {
-                finishMessage(fragmentConsumer);
+                finishMessage(fragmentConsumer);    //完成整个消息读取
             }
 
             return bytesToConsume;
@@ -122,8 +122,8 @@ public class InboundDecoder implements Releasable {
     }
 
     private void finishMessage(Consumer<Object> fragmentConsumer) {
-        cleanDecodeState();
-        fragmentConsumer.accept(END_CONTENT);
+        cleanDecodeState(); //将整个状态全部清零
+        fragmentConsumer.accept(END_CONTENT);   //增加结束符END_CONTENT
     }
 
     private void cleanDecodeState() {
@@ -169,10 +169,10 @@ public class InboundDecoder implements Releasable {
     // exposed for use in tests
     static Header readHeader(Version version, int networkMessageSize, BytesReference bytesReference) throws IOException {
         try (StreamInput streamInput = bytesReference.streamInput()) {
-            streamInput.skip(TcpHeader.BYTES_REQUIRED_FOR_MESSAGE_SIZE);
-            long requestId = streamInput.readLong();
-            byte status = streamInput.readByte();
-            Version remoteVersion = Version.fromId(streamInput.readInt());
+            streamInput.skip(TcpHeader.BYTES_REQUIRED_FOR_MESSAGE_SIZE);//跳过前6个字节BYTES_REQUIRED_FOR_MESSAGE_SIZE
+            long requestId = streamInput.readLong();    //requestId
+            byte status = streamInput.readByte();       //状态
+            Version remoteVersion = Version.fromId(streamInput.readInt());  //lucene版本号
             Header header = new Header(networkMessageSize, requestId, status, remoteVersion);
             final IllegalStateException invalidVersion = ensureVersionCompatibility(remoteVersion, version, header.isHandshake());
             if (invalidVersion != null) {

@@ -41,7 +41,7 @@ public class InboundAggregator implements Releasable {
     private final Predicate<String> requestCanTripBreaker;
 
     private ReleasableBytesReference firstContent;
-    private ArrayList<ReleasableBytesReference> contentAggregation;
+    private ArrayList<ReleasableBytesReference> contentAggregation; //内容的聚合Aggregation
     private Header currentHeader;
     private Exception aggregationException;
     private boolean canTripBreaker = true;
